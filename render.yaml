@@ -38,4 +38,9 @@ services:
         generateValue: true
       - key: N8N_PASSWORD
         generateValue: true
-          
+
+      # --- ADD THESE TWO NEW VARIABLES ---
+      - key: NODES_EXTERNAL_MODULES
+        value: n8n-nodes-scrapingbee
+      - key: N8N_TRUST_PROXY
+        value: true
