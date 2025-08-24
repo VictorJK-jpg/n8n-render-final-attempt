@@ -16,6 +16,8 @@ services:
         value: n8n_db_august_user
       - key: DB_POSTGRESDB_PASSWORD
         value: fDG9A42ZFn0e8w37h05p8x9GnzVkCFws
+      - key: DB_POSTGRESDB_SSL
+        value: "true"
       
       # --- Critical n8n Configuration ---
       # THIS IS THE MOST IMPORTANT - without this, n8n can't decrypt your existing workflows
