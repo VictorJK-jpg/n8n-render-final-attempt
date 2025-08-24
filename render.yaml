@@ -1,28 +1,17 @@
-# Blueprint for deploying n8n on Render
-# This file is now the single source of truth for your service's configuration.
-# It is configured to connect to your EXISTING database.
-
 services:
-  # This section defines your existing n8n web service.
   - type: web
-    name: n8n-service # Matches your service name from the screenshot
-    plan: free
-    runtime: image
-    image:
-      url: docker.io/n8nio/n8n:latest
-
-    # All non-secret configuration is now defined here.
+    name: n8n-service
+    env: docker
+    plan: starter
+    dockerCommand: docker.io/n8nio/n8n:latest
     envVars:
       # --- Database Connection ---
-      # We are defining the connection to your existing database.
-      # Render will automatically provide these values from your database service
-      # if they are not set in the UI. For clarity, we define them here.
       - key: DB_TYPE
         value: postgresdb
       - key: DB_POSTGRESDB_HOST
         fromService:
-          type: pserv # pserv is the type for a Render Postgres DB
-          name: n8n-db-august # The name of your database service
+          type: pserv
+          name: n8n-db-august
           property: host
       - key: DB_POSTGRESDB_DATABASE
         fromService:
@@ -39,20 +28,36 @@ services:
           type: pserv
           name: n8n-db-august
           property: password
-
-      # --- Webhook and Proxy Configuration (THE FIX FOR 403 ERROR) ---
-      # This tells n8n its public URL, using your custom domain.
+      
+      # --- Critical n8n Configuration ---
+      # THIS IS THE MOST IMPORTANT - without this, n8n can't decrypt your existing workflows
+      - key: N8N_ENCRYPTION_KEY
+        value: "pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c="
+      
+      # --- Authentication ---
+      - key: N8N_USERNAME
+        value: "peJ/vWkjgtxrZT6glrMq4gTvqJ5SJdXj0nu5DLRCjSY="
+      - key: N8N_PASSWORD
+        value: "yBfWSMsWwlTYw3WuudA6PLFlDc9q8SUsRnpZYYJv1EE="
+      
+      # --- Web Configuration ---
       - key: WEBHOOK_URL
         value: https://n8n.victorseda.xyz/
-
-      # This tells n8n to trust the proxy headers from Render.
       - key: N8N_TRUST_PROXY
         value: "true"
-
-      # --- Other Configuration from your Environment ---
+      - key: N8N_EXPRESS_TRUST_PROXY
+        value: "true"
+      - key: N8N_SECURE_COOKIE
+        value: "true"
+      
+      # --- Additional Settings ---
       - key: GENERIC_TIMEZONE
         value: Africa/Lagos
       - key: NODES_EXTERNAL_MODULES
         value: n8n-nodes-scrapingbee
-      - key: N8N_SECURE_COOKIE
+      - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
         value: "true"
+      - key: N8N_RUNNERS_ENABLED
+        value: "true"
+      - key: WEBHOOK_TUNNEL_INSECURE_WORKFLOW_OWNER_ONLY
+        value: "false"
