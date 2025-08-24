@@ -1,77 +1,60 @@
 # Blueprint for deploying n8n on Render
-# This file serves as the single source of truth for the service configuration.
+# This file is now the single source of truth for your service's configuration.
+# It is configured to connect to your EXISTING database named 'n8n-db-august'.
 
 services:
-  # Defines the n8n web service
+  # This section defines your existing n8n web service.
   - type: web
-    name: n8n-service # This name is used to reference the service below
-    plan: free # Can be upgraded to a paid plan for more resources
+    name: n8n-service # Matches your service name from the screenshot
+    plan: free
     runtime: image
     image:
-      url: docker.io/n8nio/n8n:latest # Pulls the latest official n8n image
+      url: docker.io/n8nio/n8n:latest
 
-    # Environment variables are crucial for n8n's configuration
+    # This 'databases' block explicitly links your web service
+    # to your existing database. This is the key to making it work.
+    databases:
+      - name: n8n-db-august # Matches your database name from the screenshot
+        property: connectionString # This tells Render to create the connection string
+
+    # All non-secret configuration is now defined here.
     envVars:
       # --- Database Connection ---
-      # Tells n8n to use a PostgreSQL database
+      # This tells n8n to use a PostgreSQL database.
       - key: DB_TYPE
         value: postgresdb
-      # These 'fromDatabase' keys automatically pull connection details
-      # from the Render Postgres database defined at the end of this file.
+      # These 'fromDatabase' keys automatically and securely pull the connection
+      # details from the 'n8n-db-august' database linked above.
       - key: DB_POSTGRESDB_HOST
         fromDatabase:
-          name: n8n-database # Must match the name of the database service below
+          name: n8n-db-august
           property: host
       - key: DB_POSTGRESDB_DATABASE
         fromDatabase:
-          name: n8n-database
+          name: n8n-db-august
           property: database
       - key: DB_POSTGRESDB_USER
         fromDatabase:
-          name: n8n-database
+          name: n8n-db-august
           property: user
       - key: DB_POSTGRESDB_PASSWORD
         fromDatabase:
-          name: n8n-database
+          name: n8n-db-august
           property: password
 
-      # --- n8n Core Configuration ---
-      # IMPORTANT: Set your encryption key directly in the Render Dashboard
-      # and do NOT store it in this file for security reasons.
-      # It's a secret that should not be in your public GitHub repo.
-      # - key: N8N_ENCRYPTION_KEY
-      #   value: "YOUR_SECRET_KEY_HERE" # <-- DO NOT DO THIS
-
-      # Sets the timezone for cron-based triggers
-      - key: GENERIC_TIMEZONE
-        value: Africa/Lagos
-
       # --- Webhook and Proxy Configuration (THE FIX FOR 403 ERROR) ---
-      # This is the most critical part for Render hosting.
-      # It tells n8n its own public URL.
+      # This tells n8n its public URL, using your custom domain.
       - key: WEBHOOK_URL
-        fromService:
-          type: web
-          name: n8n-service # Must match the name of this service
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://n8n.victorseda.xyz/
 
       # This tells n8n to trust the proxy headers from Render.
       - key: N8N_TRUST_PROXY
         value: "true"
 
-      # --- Optional but Recommended Settings ---
-      # Enforces secure cookies, essential when not on localhost
-      - key: N8N_SECURE_COOKIE
-        value: "true"
-      
-      # Loads your desired community node
+      # --- Other Configuration from your Environment ---
+      - key: GENERIC_TIMEZONE
+        value: Africa/Lagos
       - key: NODES_EXTERNAL_MODULES
         value: n8n-nodes-scrapingbee
-
-  # Defines the Postgres database used by n8n
-  - type: pserv
-    name: n8n-database # This name is referenced by the web service above
-    plan: free # Can be upgraded for more storage/performance
-    databaseName: n8n_db # You can name the actual DB whatever you like
-    databaseUser: n8n_user # You can name the user whatever you like
-    postgresMajorVersion: 14 # Specify a version for consistency
+      - key: N8N_SECURE_COOKIE
+        value: "true"
