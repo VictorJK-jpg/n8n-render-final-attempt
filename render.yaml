@@ -1,46 +1,77 @@
-# Use this Blueprint to deploy n8n on Render as a web
-# service that uses a Postgres database to store
-# workflow data.
-#
-# This Blueprint uses free instance types (specified by
-# `plan`) for both the web service and the database. You
-# can upgrade to paid instance types at any time to
-# increase resources.
+# Blueprint for deploying n8n on Render
+# This file serves as the single source of truth for the service configuration.
 
 services:
+  # Defines the n8n web service
   - type: web
-    plan: free
-    # This is the runtime for services that pull a prebuilt Docker image
+    name: n8n-service # This name is used to reference the service below
+    plan: free # Can be upgraded to a paid plan for more resources
     runtime: image
-    # You can give the service any name
-    name: n8n-service
     image:
-      # Pulls the n8n image tagged as latest from Docker Hub
-      url: docker.io/n8nio/n8n:latest
+      url: docker.io/n8nio/n8n:latest # Pulls the latest official n8n image
 
-    # All environment variables defined below are required!
-    #
-    # You can define additional environment variables as needed.
+    # Environment variables are crucial for n8n's configuration
     envVars:
-      # Generates a base64-encoded key for
-      # encrypting credentials in n8n
-      #
-      # Do not modify this value after it's generated!
-      # If you do, you'll lose access to all credentials
-      # encrypted with the previous value.
-      - key: N8N_ENCRYPTION_KEY
-        generateValue: true
+      # --- Database Connection ---
+      # Tells n8n to use a PostgreSQL database
+      - key: DB_TYPE
+        value: postgresdb
+      # These 'fromDatabase' keys automatically pull connection details
+      # from the Render Postgres database defined at the end of this file.
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: n8n-database # Must match the name of the database service below
+          property: host
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: n8n-database
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: n8n-database
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: n8n-database
+          property: password
 
-      # These automatically populate connection details 
-      # for the Render Postgres database defined below
+      # --- n8n Core Configuration ---
+      # IMPORTANT: Set your encryption key directly in the Render Dashboard
+      # and do NOT store it in this file for security reasons.
+      # It's a secret that should not be in your public GitHub repo.
+      # - key: N8N_ENCRYPTION_KEY
+      #   value: "YOUR_SECRET_KEY_HERE" # <-- DO NOT DO THIS
+
+      # Sets the timezone for cron-based triggers
+      - key: GENERIC_TIMEZONE
+        value: Africa/Lagos
+
+      # --- Webhook and Proxy Configuration (THE FIX FOR 403 ERROR) ---
+      # This is the most critical part for Render hosting.
+      # It tells n8n its own public URL.
+      - key: WEBHOOK_URL
+        fromService:
+          type: web
+          name: n8n-service # Must match the name of this service
+          envVarKey: RENDER_EXTERNAL_URL
+
+      # This tells n8n to trust the proxy headers from Render.
+      - key: N8N_TRUST_PROXY
+        value: "true"
+
+      # --- Optional but Recommended Settings ---
+      # Enforces secure cookies, essential when not on localhost
+      - key: N8N_SECURE_COOKIE
+        value: "true"
       
-      - key: N8N_USERNAME
-        generateValue: true
-      - key: N8N_PASSWORD
-        generateValue: true
-
-      # --- ADD THESE TWO NEW VARIABLES ---
+      # Loads your desired community node
       - key: NODES_EXTERNAL_MODULES
         value: n8n-nodes-scrapingbee
-      - key: N8N_TRUST_PROXY
-        value: true
+
+  # Defines the Postgres database used by n8n
+  - type: pserv
+    name: n8n-database # This name is referenced by the web service above
+    plan: free # Can be upgraded for more storage/performance
+    databaseName: n8n_db # You can name the actual DB whatever you like
+    databaseUser: n8n_user # You can name the user whatever you like
+    postgresMajorVersion: 14 # Specify a version for consistency
