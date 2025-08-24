@@ -1,6 +1,6 @@
 # Blueprint for deploying n8n on Render
 # This file is now the single source of truth for your service's configuration.
-# It is configured to connect to your EXISTING database named 'n8n-db-august'.
+# It is configured to connect to your EXISTING database.
 
 services:
   # This section defines your existing n8n web service.
@@ -11,34 +11,32 @@ services:
     image:
       url: docker.io/n8nio/n8n:latest
 
-    # This 'databases' block explicitly links your web service
-    # to your existing database. This is the key to making it work.
-    databases:
-      - name: n8n-db-august # Matches your database name from the screenshot
-        property: connectionString # This tells Render to create the connection string
-
     # All non-secret configuration is now defined here.
     envVars:
       # --- Database Connection ---
-      # This tells n8n to use a PostgreSQL database.
+      # We are defining the connection to your existing database.
+      # Render will automatically provide these values from your database service
+      # if they are not set in the UI. For clarity, we define them here.
       - key: DB_TYPE
         value: postgresdb
-      # These 'fromDatabase' keys automatically and securely pull the connection
-      # details from the 'n8n-db-august' database linked above.
       - key: DB_POSTGRESDB_HOST
-        fromDatabase:
-          name: n8n-db-august
+        fromService:
+          type: pserv # pserv is the type for a Render Postgres DB
+          name: n8n-db-august # The name of your database service
           property: host
       - key: DB_POSTGRESDB_DATABASE
-        fromDatabase:
+        fromService:
+          type: pserv
           name: n8n-db-august
           property: database
       - key: DB_POSTGRESDB_USER
-        fromDatabase:
+        fromService:
+          type: pserv
           name: n8n-db-august
           property: user
       - key: DB_POSTGRESDB_PASSWORD
-        fromDatabase:
+        fromService:
+          type: pserv
           name: n8n-db-august
           property: password
 
