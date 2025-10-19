@@ -1,53 +1,53 @@
 services:
   - type: web
     name: n8n-service
-    env: docker
+    env: node
     plan: starter
-    dockerCommand: docker.io/n8nio/n8n:latest
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       # --- Database Connection ---
       - key: DB_TYPE
         value: postgresdb
       - key: DB_POSTGRESDB_HOST
-        value: dpg-d2ah329r0fns73cka4qg-a.oregon-postgres.render.com
+        value: dpg-d3qk0o8dl3ps73c1df10-a.oregon-postgres.render.com
+      - key: DB_POSTGRESDB_PORT
+        value: "5432"
       - key: DB_POSTGRESDB_DATABASE
-        value: n8n_db_august
+        value: dipprofitn8n
       - key: DB_POSTGRESDB_USER
-        value: n8n_db_august_user
+        value: admin
       - key: DB_POSTGRESDB_PASSWORD
-        value: fDG9A42ZFn0e8w37h05p8x9GnzVkCFws
+        value: kBicFNEPe3ViiTBLkUiTaAfr6Go5RaOE
       - key: DB_POSTGRESDB_SSL
         value: "true"
       
       # --- Critical n8n Configuration ---
-      # THIS IS THE MOST IMPORTANT - without this, n8n can't decrypt your existing workflows
       - key: N8N_ENCRYPTION_KEY
         value: "pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c="
       
       # --- Authentication ---
-      - key: N8N_USERNAME
-        value: "peJ/vWkjgtxrZT6glrMq4gTvqJ5SJdXj0nu5DLRCjSY="
-      - key: N8N_PASSWORD
-        value: "yBfWSMsWwlTYw3WuudA6PLFlDc9q8SUsRnpZYYJv1EE="
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: your_secure_password_here
       
       # --- Web Configuration ---
       - key: WEBHOOK_URL
-        value: https://n8n.victorseda.xyz/
-      - key: N8N_TRUST_PROXY
-        value: "true"
-      - key: N8N_EXPRESS_TRUST_PROXY
-        value: "true"
-      - key: N8N_SECURE_COOKIE
-        value: "true"
+        value: https://n8n-service.onrender.com
+      - key: N8N_HOST
+        value: 0.0.0.0
+      - key: N8N_PORT
+        value: "10000"
+      - key: N8N_PROTOCOL
+        value: https
       
       # --- Additional Settings ---
       - key: GENERIC_TIMEZONE
         value: Africa/Lagos
-      - key: NODES_EXTERNAL_MODULES
-        value: n8n-nodes-scrapingbee
       - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
-        value: "true"
-      - key: N8N_RUNNERS_ENABLED
-        value: "true"
-      - key: WEBHOOK_TUNNEL_INSECURE_WORKFLOW_OWNER_ONLY
         value: "false"
+      - key: NODE_ENV
+        value: production
