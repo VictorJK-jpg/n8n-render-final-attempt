@@ -4,8 +4,7 @@
   "description": "n8n running on Render",
   "main": "index.js",
   "scripts": {
-    "start": "n8n",
-    "build": "npm install --production"
+    "start": "n8n"
   },
   "dependencies": {
     "n8n": "latest"
