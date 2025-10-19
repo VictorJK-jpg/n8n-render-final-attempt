@@ -19,8 +19,20 @@ services:
         value: admin
       - key: DB_POSTGRESDB_PASSWORD
         value: kBicFNEPe3ViiTBLkUiTaAfr6Go5RaOE
-      - key: DB_POSTGRESDB_SSL
+      
+      # --- SSL Configuration (CRITICAL FIX) ---
+      - key: DB_POSTGRESDB_SSL_ENABLED
         value: "true"
+      - key: DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
+        value: "false"
+      
+      # --- Port Configuration (CRITICAL FIX) ---
+      - key: N8N_PORT
+        value: "10000"
+      - key: N8N_HOST
+        value: "0.0.0.0"
+      - key: PORT
+        value: "10000"
       
       # --- Critical n8n Configuration ---
       - key: N8N_ENCRYPTION_KEY
@@ -32,15 +44,11 @@ services:
       - key: N8N_BASIC_AUTH_USER
         value: admin
       - key: N8N_BASIC_AUTH_PASSWORD
-        value: your_secure_password_here
+        value: YourSecurePassword123
       
       # --- Web Configuration ---
       - key: WEBHOOK_URL
         value: https://n8n-service.onrender.com
-      - key: N8N_HOST
-        value: 0.0.0.0
-      - key: N8N_PORT
-        value: "10000"
       - key: N8N_PROTOCOL
         value: https
       
