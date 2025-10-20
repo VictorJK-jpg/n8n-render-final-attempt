@@ -2,9 +2,10 @@ services:
   - type: web
     name: n8n-service
     env: node
-    plan: starter
+    plan: free
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /healthz
     envVars:
       # --- Database Connection String ---
       - key: DB_TYPE
@@ -14,9 +15,9 @@ services:
       
       # --- Port Configuration ---
       - key: PORT
-        value: "10000"
+        value: "5678"
       - key: N8N_PORT
-        value: "10000"
+        value: "5678"
       - key: N8N_HOST
         value: "0.0.0.0"
       
@@ -38,6 +39,16 @@ services:
       - key: N8N_PROTOCOL
         value: https
       
+      # --- Health Check Configuration (CRITICAL) ---
+      - key: N8N_DIAGNOSTICS_ENABLED
+        value: "true"
+      - key: N8N_DISABLE_PRODUCTION_MAIN_PROCESS
+        value: "false"
+      
+      # --- Security Settings ---
+      - key: N8N_BLOCK_ENV_ACCESS_IN_NODE
+        value: "false"
+      
       # --- Additional Settings ---
       - key: GENERIC_TIMEZONE
         value: Africa/Lagos
@@ -45,3 +56,5 @@ services:
         value: "false"
       - key: NODE_ENV
         value: production
+      - key: N8N_RUNNERS_ENABLED
+        value: "true"
