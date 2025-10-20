@@ -6,37 +6,23 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
-      # --- Database Connection ---
+      # --- Database Connection String ---
       - key: DB_TYPE
         value: postgresdb
-      - key: DB_POSTGRESDB_HOST
-        value: dpg-d3qk0o8dl3ps73c1df10-a.oregon-postgres.render.com
-      - key: DB_POSTGRESDB_PORT
-        value: "5432"
-      - key: DB_POSTGRESDB_DATABASE
-        value: dipprofitn8n
-      - key: DB_POSTGRESDB_USER
-        value: admin
-      - key: DB_POSTGRESDB_PASSWORD
-        value: kBicFNEPe3ViiTBLkUiTaAfr6Go5RaOE
+      - key: DB_POSTGRESDB_CONNECTION_STRING
+        value: postgresql://admin:kBicFNEPe3ViiTBLkUiTaAfr6Go5RaOE@dpg-d3qk0o8dl3ps73c1df10-a.oregon-postgres.render.com:5432/dipprofitn8n?sslmode=require
       
-      # --- SSL Configuration (CRITICAL FIX) ---
-      - key: DB_POSTGRESDB_SSL_ENABLED
-        value: "true"
-      - key: DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
-        value: "false"
-      
-      # --- Port Configuration (CRITICAL FIX) ---
+      # --- Port Configuration ---
+      - key: PORT
+        value: "10000"
       - key: N8N_PORT
         value: "10000"
       - key: N8N_HOST
         value: "0.0.0.0"
-      - key: PORT
-        value: "10000"
       
       # --- Critical n8n Configuration ---
       - key: N8N_ENCRYPTION_KEY
-        value: "pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c="
+        value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
       
       # --- Authentication ---
       - key: N8N_BASIC_AUTH_ACTIVE
@@ -44,11 +30,11 @@ services:
       - key: N8N_BASIC_AUTH_USER
         value: admin
       - key: N8N_BASIC_AUTH_PASSWORD
-        value: YourSecurePassword123
+        value: Dipprofit2025@
       
       # --- Web Configuration ---
       - key: WEBHOOK_URL
-        value: https://n8n-service.onrender.com
+        value: https://dipprofit-n8n-render.onrender.com
       - key: N8N_PROTOCOL
         value: https
       
