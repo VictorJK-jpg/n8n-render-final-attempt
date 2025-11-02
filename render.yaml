@@ -1,60 +1,60 @@
 services:
+  # n8n Web Service
   - type: web
-    name: n8n-service
-    env: node
+    name: n8n-workflow
+    env: docker
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
-    healthCheckPath: /healthz
+    region: oregon
+    dockerfilePath: ./Dockerfile
     envVars:
-      # --- Database Connection String ---
-      - key: DB_TYPE
-        value: postgresdb
-      - key: DB_POSTGRESDB_CONNECTION_STRING
-        value: postgresql://admin:kBicFNEPe3ViiTBLkUiTaAfr6Go5RaOE@dpg-d3qk0o8dl3ps73c1df10-a.oregon-postgres.render.com:5432/dipprofitn8n?sslmode=require
-      
-      # --- Port Configuration ---
-      - key: PORT
-        value: "5678"
       - key: N8N_PORT
-        value: "5678"
-      - key: N8N_HOST
-        value: "0.0.0.0"
-      
-      # --- Critical n8n Configuration ---
-      - key: N8N_ENCRYPTION_KEY
-        value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
-      
-      # --- Authentication ---
-      - key: N8N_BASIC_AUTH_ACTIVE
-        value: "true"
-      - key: N8N_BASIC_AUTH_USER
-        value: admin
-      - key: N8N_BASIC_AUTH_PASSWORD
-        value: Dipprofit2025@
-      
-      # --- Web Configuration ---
-      - key: WEBHOOK_URL
-        value: https://dipprofit-n8n-render.onrender.com
+        value: 10000
       - key: N8N_PROTOCOL
         value: https
-      
-      # --- Health Check Configuration (CRITICAL) ---
-      - key: N8N_DIAGNOSTICS_ENABLED
-        value: "true"
-      - key: N8N_DISABLE_PRODUCTION_MAIN_PROCESS
-        value: "false"
-      
-      # --- Security Settings ---
-      - key: N8N_BLOCK_ENV_ACCESS_IN_NODE
-        value: "false"
-      
-      # --- Additional Settings ---
+      - key: N8N_HOST
+        fromService:
+          type: web
+          name: n8n-workflow
+          property: host
+      - key: WEBHOOK_URL
+        fromService:
+          type: web
+          name: n8n-workflow
+          property: host
       - key: GENERIC_TIMEZONE
         value: Africa/Lagos
-      - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
-        value: "false"
-      - key: NODE_ENV
-        value: production
-      - key: N8N_RUNNERS_ENABLED
-        value: "true"
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: n8n-postgres-db
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: n8n-postgres-db
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: n8n-postgres-db
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: n8n-postgres-db
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: n8n-postgres-db
+          property: password
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      - key: N8N_USER_MANAGEMENT_JWT_SECRET
+        generateValue: true
+
+databases:
+  # PostgreSQL Database
+  - name: n8n-postgres-db
+    databaseName: n8n_db
+    user: n8n_user
+    plan: free
+    region: oregon
+    postgresMajorVersion: 17
