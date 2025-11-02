@@ -26,35 +26,16 @@ services:
       - key: DB_TYPE
         value: postgresdb
       - key: DB_POSTGRESDB_HOST
-        fromDatabase:
-          name: n8n-postgres-db
-          property: host
+        value: dpg-d43j9gemcj7s73b5b9og-a.oregon-postgres.render.com
       - key: DB_POSTGRESDB_PORT
-        fromDatabase:
-          name: n8n-postgres-db
-          property: port
+        value: 5432
       - key: DB_POSTGRESDB_DATABASE
-        fromDatabase:
-          name: n8n-postgres-db
-          property: database
+        value: n8n_db_cuwg
       - key: DB_POSTGRESDB_USER
-        fromDatabase:
-          name: n8n-postgres-db
-          property: user
+        value: victor
       - key: DB_POSTGRESDB_PASSWORD
-        fromDatabase:
-          name: n8n-postgres-db
-          property: password
+        value: PE2ho4tKfqPiTVxkwiSxQ1aMZWnSwXcD
       - key: N8N_ENCRYPTION_KEY
         value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
       - key: N8N_USER_MANAGEMENT_JWT_SECRET
         generateValue: true
-
-databases:
-  # PostgreSQL Database
-  - name: n8n-postgres-db
-    databaseName: n8n_db
-    user: n8n_user
-    plan: free
-    region: oregon
-    postgresMajorVersion: 17
