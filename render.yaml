@@ -46,7 +46,7 @@ services:
           name: n8n-postgres-db
           property: password
       - key: N8N_ENCRYPTION_KEY
-        generateValue: true
+        value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
       - key: N8N_USER_MANAGEMENT_JWT_SECRET
         generateValue: true
 
