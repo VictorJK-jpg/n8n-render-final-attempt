@@ -11,3 +11,25 @@ The `render.yaml` file defines the following resources:
 - A Render Postgres database that stores n8n data
 
 Each of the above uses a free instance type by default.
+
+Push these files to your GitHub repo
+
+bash   git add render.yaml Dockerfile .dockerignore
+   git commit -m "Add Render deployment config"
+   git push
+
+In Render Dashboard:
+
+Click "New +"
+Select "Blueprint"
+Connect your GitHub repo
+Select the repository
+Click "Apply"
+
+
+That's it! Render will:
+
+Create the PostgreSQL database (n8n-postgres-db)
+Create the web service (n8n-workflow)
+Automatically connect them
+Deploy everything
