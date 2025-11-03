@@ -7,35 +7,50 @@ services:
     region: oregon
     dockerfilePath: ./Dockerfile
     envVars:
+      # --- n8n Core Configuration ---
       - key: N8N_PORT
-        value: 10000
+        value: "5678"
       - key: N8N_PROTOCOL
         value: https
       - key: N8N_HOST
-        fromService:
-          type: web
-          name: n8n-workflow
-          property: host
+        value: n8n.victorseda.xyz
       - key: WEBHOOK_URL
-        fromService:
-          type: web
-          name: n8n-workflow
-          property: host
+        value: https://n8n.victorseda.xyz
       - key: GENERIC_TIMEZONE
         value: Africa/Lagos
-      - key: DB_TYPE
-        value: postgresdb
-      - key: DB_POSTGRESDB_HOST
-        value: dpg-d43j9gemcj7s73b5b9og-a.oregon-postgres.render.com
-      - key: DB_POSTGRESDB_PORT
-        value: 5432
-      - key: DB_POSTGRESDB_DATABASE
-        value: n8n_db_cuwg
-      - key: DB_POSTGRESDB_USER
-        value: victor
-      - key: DB_POSTGRESDB_PASSWORD
-        value: PE2ho4tKfqPiTVxkwiSxQ1aMZWnSwXcD
+      - key: NODE_ENV
+        value: production
+      - key: N8N_SECURE_COOKIE
+        value: "false"
+
+      # --- n8n Security ---
+      # Encryption Key
       - key: N8N_ENCRYPTION_KEY
         value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
+      # Basic Auth
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
+      - key: N8N_BASIC_AUTH_USER
+        value: victor
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: Ihatehackers123
+      # JWT Secret
       - key: N8N_USER_MANAGEMENT_JWT_SECRET
         generateValue: true
+
+      # --- Supabase Database Connection ---
+      # This tells n8n to use an external Postgres database
+      - key: DB_TYPE
+        value: postgresdb
+
+      # Values from your direct connection string
+      - key: DB_POSTGRESDB_HOST
+        value: db.shbqewkekbisoxhnobuc.supabase.co
+      - key: DB_POSTGRESDB_PORT
+        value: "5432"
+      - key: DB_POSTGRESDB_DATABASE
+        value: postgres
+      - key: DB_POSTGRESDB_USER
+        value: postgres
+      - key: DB_POSTGRESDB_PASSWORD
+        value: Ihatehackers123
