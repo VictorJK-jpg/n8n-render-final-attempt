@@ -24,33 +24,34 @@ services:
         value: "false"
 
       # --- n8n Security ---
-      # Encryption Key
+      # Encryption Key (Matches Docker)
       - key: N8N_ENCRYPTION_KEY
         value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
-      # Basic Auth
+      # Basic Auth (Matches Docker)
       - key: N8N_BASIC_AUTH_ACTIVE
         value: "true"
       - key: N8N_BASIC_AUTH_USER
         value: victor
       - key: N8N_BASIC_AUTH_PASSWORD
         value: Ihatehackers123
-      # JWT Secret
-      - key: N8N_USER_MANAGEMENT_JWT_SECRET
-        generateValue: true
 
-      # --- Supabase Database Connection ---
-      # This tells n8n to use an external Postgres database
+      # --- Supabase Database Connection (Synced with Docker) ---
       - key: DB_TYPE
         value: postgresdb
-
-      # Values from your direct connection string
+      # Using the same Session Pooler as Docker
       - key: DB_POSTGRESDB_HOST
-        value: db.shbqewkekbisoxhnobuc.supabase.co
+        value: aws-1-us-east-2.pooler.supabase.com
       - key: DB_POSTGRESDB_PORT
         value: "5432"
       - key: DB_POSTGRESDB_DATABASE
         value: postgres
+      # Using the same user as Docker
       - key: DB_POSTGRESDB_USER
-        value: postgres
+        value: postgres.shbqewkekbisoxhnobuc
       - key: DB_POSTGRESDB_PASSWORD
         value: Ihatehackers123
+      # Added from Docker setup
+      - key: DB_POSTGRESDB_SSL
+        value: "true"
+      - key: DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
+        value: "false"
