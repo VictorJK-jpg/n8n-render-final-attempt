@@ -35,22 +35,21 @@ services:
       - key: N8N_BASIC_AUTH_PASSWORD
         value: Ihatehackers123
 
-      # --- Supabase Database Connection (Synced with Docker) ---
+      # --- Supabase Database Connection (Using Transaction Pooler) ---
       - key: DB_TYPE
         value: postgresdb
-      # Using the same Session Pooler as Docker
+      # Using the IPv4 compatible Transaction Pooler
       - key: DB_POSTGRESDB_HOST
         value: aws-1-us-east-2.pooler.supabase.com
       - key: DB_POSTGRESDB_PORT
-        value: "5432"
+        value: "6543"
       - key: DB_POSTGRESDB_DATABASE
         value: postgres
-      # Using the same user as Docker
       - key: DB_POSTGRESDB_USER
         value: postgres.shbqewkekbisoxhnobuc
       - key: DB_POSTGRESDB_PASSWORD
         value: Ihatehackers123
-      # Added from Docker setup
+      # These SSL settings are good practice for pooler connections
       - key: DB_POSTGRESDB_SSL
         value: "true"
       - key: DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
