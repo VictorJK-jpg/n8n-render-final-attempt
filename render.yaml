@@ -1,7 +1,7 @@
 services:
   # n8n Web Service
   - type: web
-    name: n8n-workflow
+    name: n8n-render-final-attempt
     env: docker
     plan: free
     region: oregon
