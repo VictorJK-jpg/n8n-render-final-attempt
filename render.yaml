@@ -1,7 +1,7 @@
 services:
   # n8n Web Service
   - type: web
-    name: n8n-workflow
+    name: n8n-workflow-claude
     env: docker
     plan: free
     region: oregon
@@ -24,12 +24,10 @@ services:
       - key: DB_POSTGRESDB_PORT
         value: 5432
       - key: DB_POSTGRESDB_DATABASE
-        value: n8n_db_cuwg
+        value: n8n-postgres-db
       - key: DB_POSTGRESDB_USER
         value: victor
       - key: DB_POSTGRESDB_PASSWORD
         value: PE2ho4tKfqPiTVxkwiSxQ1aMZWnSwXcD
       - key: N8N_ENCRYPTION_KEY
         value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
-      - key: N8N_USER_MANAGEMENT_JWT_SECRET
-        generateValue: true
