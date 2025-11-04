@@ -31,3 +31,8 @@ services:
         value: PE2ho4tKfqPiTVxkwiSxQ1aMZWnSwXcD
       - key: N8N_ENCRYPTION_KEY
         value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
+      # --- Add these two lines for SSL ---
+      - key: DB_POSTGRESDB_SSL
+        value: "true"
+      - key: DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
+        value: "false"
