@@ -1,15 +1,14 @@
 services:
   # n8n Web Service
   - type: web
-    name: n8n-render-final-attempt
+    name: n8n-workflow
     env: docker
     plan: free
     region: oregon
     dockerfilePath: ./Dockerfile
     envVars:
-      # --- n8n Core Configuration ---
       - key: N8N_PORT
-        value: "5678"
+        value: 5678
       - key: N8N_PROTOCOL
         value: https
       - key: N8N_HOST
@@ -18,39 +17,19 @@ services:
         value: https://n8n.victorseda.xyz
       - key: GENERIC_TIMEZONE
         value: Africa/Lagos
-      - key: NODE_ENV
-        value: production
-      - key: N8N_SECURE_COOKIE
-        value: "false"
-
-      # --- n8n Security ---
-      # Encryption Key (Matches Docker)
-      - key: N8N_ENCRYPTION_KEY
-        value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
-      # Basic Auth (Matches Docker)
-      - key: N8N_BASIC_AUTH_ACTIVE
-        value: "true"
-      - key: N8N_BASIC_AUTH_USER
-        value: victor
-      - key: N8N_BASIC_AUTH_PASSWORD
-        value: Ihatehackers123
-
-      # --- Supabase Database Connection (Using Session Pooler for Migrations) ---
       - key: DB_TYPE
         value: postgresdb
-      # Using the IPv4 compatible Session Pooler for long-running connections
       - key: DB_POSTGRESDB_HOST
-        value: aws-1-us-east-2.pooler.supabase.com
+        value: dpg-d43j9gemcj7s73b5b9og-a.oregon-postgres.render.com
       - key: DB_POSTGRESDB_PORT
-        value: "5432" # <-- Changed to 5432 for Session Pooler
+        value: 5432
       - key: DB_POSTGRESDB_DATABASE
-        value: postgres
+        value: n8n_db_cuwg
       - key: DB_POSTGRESDB_USER
-        value: postgres.shbqewkekbisoxhnobuc
+        value: victor
       - key: DB_POSTGRESDB_PASSWORD
-        value: Ihatehackers123
-      # These SSL settings are good practice for pooler connections
-      - key: DB_POSTGRESDB_SSL
-        value: "true"
-      - key: DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
-        value: "false"
+        value: PE2ho4tKfqPiTVxkwiSxQ1aMZWnSwXcD
+      - key: N8N_ENCRYPTION_KEY
+        value: pCPoSZx5L94EHTQhcMHdmomlqtrcBbeALkE/E2Kt54c=
+      - key: N8N_USER_MANAGEMENT_JWT_SECRET
+        generateValue: true
